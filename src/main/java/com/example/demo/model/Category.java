@@ -4,21 +4,16 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tickets")
-public class Ticket {
+@Table(name = "categories")
+public class Category {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    @Column(unique = true)
+    private String categoryName;
     private String description;
-    private String location;
-    private String createdBy;
+    private String defaultUrgency;
     private LocalDateTime createdAt;
-
-    @ManyToOne
-    private Category assignedCategory;
-
-    private String urgencyLevel; // LOW / MEDIUM / HIGH / CRITICAL
 
     @PrePersist
     protected void onCreate() { createdAt = LocalDateTime.now(); }
