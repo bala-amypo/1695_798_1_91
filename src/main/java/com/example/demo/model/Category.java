@@ -1,20 +1,17 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
-@Table(name = "categories")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Category {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String categoryName;
+    private String name;
     private String description;
-    private String defaultUrgency;
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    protected void onCreate() { createdAt = LocalDateTime.now(); }
 }

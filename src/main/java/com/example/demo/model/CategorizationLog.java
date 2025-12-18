@@ -1,12 +1,15 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
-@Table(name = "categorization_logs")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CategorizationLog {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -15,11 +18,5 @@ public class CategorizationLog {
     @ManyToOne
     private CategorizationRule appliedRule;
 
-    private String matchedKeyword;
-    private String assignedCategory;
-    private String assignedUrgency;
-    private LocalDateTime loggedAt;
-
-    @PrePersist
-    protected void onCreate() { loggedAt = LocalDateTime.now(); }
+    private String notes;
 }

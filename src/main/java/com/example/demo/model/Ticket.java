@@ -1,25 +1,19 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
-@Table(name = "tickets")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Ticket {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
     private String description;
-    private String location;
-    private String createdBy;
-    private LocalDateTime createdAt;
-
-    @ManyToOne
-    private Category assignedCategory;
-
-    private String urgencyLevel; // LOW / MEDIUM / HIGH / CRITICAL
-
-    @PrePersist
-    protected void onCreate() { createdAt = LocalDateTime.now(); }
+    private String urgencyLevel;
+    private String assignedCategory;
 }
