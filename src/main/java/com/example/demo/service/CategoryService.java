@@ -1,39 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Category;
-import com.example.demo.repository.CategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
-@Service
-public class CategoryService {
+public interface CategoryService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    Category createCategory(Category category);
 
-    public Category createCategory(Category category) {
-        return categoryRepository.save(category);
-    }
+    Category getCategory(Long id);
 
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
-    }
-
-    public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id).orElse(null);
-    }
-
-    public Category updateCategory(Long id, Category updatedCategory) {
-        Category existing = getCategoryById(id);
-        if (existing == null) return null;
-        existing.setName(updatedCategory.getName());
-        existing.setDescription(updatedCategory.getDescription());
-        return categoryRepository.save(existing);
-    }
-
-    public void deleteCategory(Long id) {
-        categoryRepository.deleteById(id);
-    }
+    List<Category> getAllCategories();
 }
