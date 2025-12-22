@@ -20,13 +20,17 @@ public class Ticket {
     @Column(length = 2000)
     private String description;
 
-    private String status;
+    private String status; // e.g., OPEN, IN_PROGRESS, CLOSED
 
-    // ✅ Used by categorization engine
+    // ✅ For urgency or severity tracking
+    private String urgencyLevel; // e.g., LOW, MEDIUM, HIGH
+
+    // ✅ The category assigned (used in multiple services)
     @ManyToOne
-    @JoinColumn(name = "assigned_category_id")
-    private Category assignedCategory;
+    @JoinColumn(name = "category_id")
+    private Category category;
 
+    // ✅ Optional: user who created the ticket
     @ManyToOne
     @JoinColumn(name = "created_by")
     private User createdBy;
