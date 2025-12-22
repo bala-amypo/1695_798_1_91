@@ -1,29 +1,23 @@
 package com.example.demo.util;
 
-import com.example.demo.model.*;
+import com.example.demo.model.Ticket;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TicketCategorizationEngine {
 
-    public void categorize(Ticket t, CategorizationRule rule, UrgencyPolicy policy) {
-        if (t == null) return;
+    public String categorize(Ticket ticket) {
 
-        // ✅ Assign category based on rule
-        if (rule != null && rule.getCategory() != null) {
-            t.setAssignedCategory(rule.getCategory());
+        if (ticket.getDescription() != null &&
+                ticket.getDescription().toLowerCase().contains("login")) {
+            return "AUTH";
         }
 
-        // ✅ Assign urgency level if policy exists
-        if (policy != null && policy.getUrgencyOverride() != null) {
-            t.setUrgencyLevel(policy.getUrgencyOverride());
+        if (ticket.getDescription() != null &&
+                ticket.getDescription().toLowerCase().contains("payment")) {
+            return "BILLING";
         }
-    }
 
-    // Optional scoring or keyword match logic
-    public boolean matchesRule(Ticket t, CategorizationRule rule) {
-        if (t == null || rule == null || rule.getKeyword() == null) return false;
-        String desc = (t.getDescription() != null) ? t.getDescription().toLowerCase() : "";
-        return desc.contains(rule.getKeyword().toLowerCase());
+        return "GENERAL";
     }
 }
