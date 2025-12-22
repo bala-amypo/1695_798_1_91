@@ -1,9 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.model.*;
+import com.example.demo.model.Ticket;
 import com.example.demo.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -12,19 +13,35 @@ public class TicketService {
     @Autowired
     private TicketRepository ticketRepository;
 
-    public List<Ticket> findAll() {
+    // ✅ Create a new ticket
+    public Ticket createTicket(Ticket ticket) {
+        return ticketRepository.save(ticket);
+    }
+
+    // ✅ Get all tickets
+    public List<Ticket> getAllTickets() {
         return ticketRepository.findAll();
     }
 
-    public Ticket save(Ticket t) {
-        return ticketRepository.save(t);
+    // ✅ Get ticket by ID
+    public Ticket getTicketById(Long id) {
+        return ticketRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ticket not found with id: " + id));
     }
 
-    public Ticket update(Long id, Ticket updated) {
-        Ticket existing = ticketRepository.findById(id).orElseThrow();
-        existing.setStatus(updated.getStatus());
-        existing.setUrgencyLevel(updated.getUrgencyLevel());
-        existing.setCategory(updated.getCategory());
+    // ✅ Update a ticket
+    public Ticket updateTicket(Long id, Ticket updatedTicket) {
+        Ticket existing = getTicketById(id);
+        existing.setTitle(updatedTicket.getTitle());
+        existing.setDescription(updatedTicket.getDescription());
+        existing.setStatus(updatedTicket.getStatus());
+        existing.setUrgencyLevel(updatedTicket.getUrgencyLevel());
+        existing.setCategory(updatedTicket.getCategory());
         return ticketRepository.save(existing);
+    }
+
+    // ✅ Delete a ticket
+    public void deleteTicket(Long id) {
+        ticketRepository.deleteById(id);
     }
 }

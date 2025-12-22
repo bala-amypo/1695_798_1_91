@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.model.Ticket;
 import com.example.demo.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,29 +14,33 @@ public class TicketController {
     @Autowired
     private TicketService ticketService;
 
+    // ✅ Create a new ticket
     @PostMapping
-    public ResponseEntity<Ticket> createTicket(@RequestBody Ticket ticket) {
-        return ResponseEntity.ok(ticketService.createTicket(ticket));
+    public Ticket createTicket(@RequestBody Ticket ticket) {
+        return ticketService.createTicket(ticket);
     }
 
+    // ✅ Get all tickets
     @GetMapping
-    public ResponseEntity<List<Ticket>> getAllTickets() {
-        return ResponseEntity.ok(ticketService.getAllTickets());
+    public List<Ticket> getAllTickets() {
+        return ticketService.getAllTickets();
     }
 
+    // ✅ Get a ticket by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Ticket> getTicketById(@PathVariable Long id) {
-        return ResponseEntity.ok(ticketService.getTicketById(id));
+    public Ticket getTicketById(@PathVariable Long id) {
+        return ticketService.getTicketById(id);
     }
 
+    // ✅ Update a ticket
     @PutMapping("/{id}")
-    public ResponseEntity<Ticket> updateTicket(@PathVariable Long id, @RequestBody Ticket updatedTicket) {
-        return ResponseEntity.ok(ticketService.updateTicket(id, updatedTicket));
+    public Ticket updateTicket(@PathVariable Long id, @RequestBody Ticket updatedTicket) {
+        return ticketService.updateTicket(id, updatedTicket);
     }
 
+    // ✅ Delete a ticket
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
+    public void deleteTicket(@PathVariable Long id) {
         ticketService.deleteTicket(id);
-        return ResponseEntity.noContent().build();
     }
 }
