@@ -20,18 +20,33 @@ public class Ticket {
     @Column(length = 2000)
     private String description;
 
-    private String status; // e.g., OPEN, IN_PROGRESS, CLOSED
+    private String status;          // OPEN, IN_PROGRESS, CLOSED
+    private String urgencyLevel;    // LOW, MEDIUM, HIGH
 
-    // ✅ For urgency or severity tracking
-    private String urgencyLevel; // e.g., LOW, MEDIUM, HIGH
-
-    // ✅ The category assigned (used in multiple services)
+    // ✅ Assigned category for the ticket
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @JoinColumn(name = "assigned_category_id")
+    private Category assignedCategory;
 
-    // ✅ Optional: user who created the ticket
+    // ✅ Optional user reference
     @ManyToOne
     @JoinColumn(name = "created_by")
     private User createdBy;
+
+    // ✅ Backward compatibility methods
+    public void setCategory(Category category) {
+        this.assignedCategory = category;
+    }
+
+    public Category getCategory() {
+        return this.assignedCategory;
+    }
+
+    public void setAssignedCategory(Category category) {
+        this.assignedCategory = category;
+    }
+
+    public Category getAssignedCategory() {
+        return this.assignedCategory;
+    }
 }

@@ -1,36 +1,29 @@
 package com.example.demo.util;
 
 import com.example.demo.model.*;
-import java.util.*;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TicketCategorizationEngine {
 
-    public CategorizationLog categorizeTicket(Ticket t, List<CategorizationRule> rules, List<UrgencyPolicy> policies) {
-        CategorizationLog log = new CategorizationLog();
-        log.setTicket(t);
+    public void categorize(Ticket t, CategorizationRule rule, UrgencyPolicy policy) {
+        if (t == null) return;
 
-        for (CategorizationRule rule : rules) {
-            if (t.getDescription() != null && t.getDescription().toLowerCase().contains(rule.getKeyword().toLowerCase())) {
-                t.setAssignedCategory(rule.getCategory());
-                log.setAppliedRule(rule);
-                log.setNotes("Matched rule: " + rule.getKeyword());
-                break;
-            }
+        // ✅ Assign category based on rule
+        if (rule != null && rule.getCategory() != null) {
+            t.setAssignedCategory(rule.getCategory());
         }
 
-        if (t.getAssignedCategory() == null && policies != null) {
-            for (UrgencyPolicy policy : policies) {
-                if (t.getDescription() != null && t.getDescription().toLowerCase().contains(policy.getKeyword().toLowerCase())) {
-                    t.setUrgencyLevel(policy.getUrgencyOverride());
-                }
-            }
+        // ✅ Assign urgency level if policy exists
+        if (policy != null && policy.getUrgencyOverride() != null) {
+            t.setUrgencyLevel(policy.getUrgencyOverride());
         }
+    }
 
-        if (t.getAssignedCategory() == null) {
-            t.setAssignedCategory("Uncategorized");
-            log.setNotes("No rule matched, default applied.");
-        }
-
-        return log;
+    // Optional scoring or keyword match logic
+    public boolean matchesRule(Ticket t, CategorizationRule rule) {
+        if (t == null || rule == null || rule.getKeyword() == null) return false;
+        String desc = (t.getDescription() != null) ? t.getDescription().toLowerCase() : "";
+        return desc.contains(rule.getKeyword().toLowerCase());
     }
 }

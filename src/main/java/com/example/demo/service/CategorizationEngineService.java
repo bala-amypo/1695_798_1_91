@@ -1,28 +1,22 @@
 package com.example.demo.service;
 
-import com.example.demo.model.Ticket;
-import com.example.demo.model.CategorizationRule;
-import com.example.demo.repository.CategorizationRuleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.model.*;
+import com.example.demo.util.TicketCategorizationEngine;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class CategorizationEngineService {
 
     @Autowired
-    private CategorizationRuleRepository ruleRepository;
+    private TicketCategorizationEngine engine;
 
-    public Ticket categorizeTicket(Ticket ticket) {
-        List<CategorizationRule> rules = ruleRepository.findAll();
-        for (CategorizationRule rule : rules) {
-            if (ticket.getDescription() != null &&
-                ticket.getDescription().toLowerCase().contains(rule.getKeyword().toLowerCase())) {
-                ticket.setCategory(rule.getCategory());
-                break;
-            }
+    public void applyCategorization(Ticket ticket, CategorizationRule rule, UrgencyPolicy policy) {
+        engine.categorize(ticket, rule, policy);
+
+        // Ensure consistency
+        if (rule != null && rule.getCategory() != null) {
+            ticket.setCategory(rule.getCategory());
         }
-        return ticket;
     }
 }
