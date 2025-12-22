@@ -2,43 +2,38 @@ package com.example.demo.controller;
 
 import com.example.demo.model.CategorizationRule;
 import com.example.demo.service.CategorizationRuleService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/rules")
+@Tag(name = "Categorization Rules")
 public class CategorizationRuleController {
 
-    @Autowired
-    private CategorizationRuleService ruleService;
+    private final CategorizationRuleService ruleService;
 
-    @PostMapping
-    public ResponseEntity<CategorizationRule> createRule(@RequestBody CategorizationRule rule) {
-        return ResponseEntity.ok(ruleService.createRule(rule));
+    public CategorizationRuleController(CategorizationRuleService ruleService) {
+        this.ruleService = ruleService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<CategorizationRule>> getAllRules() {
-        return ResponseEntity.ok(ruleService.getAllRules());
+    @PostMapping("/{categoryId}")
+    public CategorizationRule createRule(
+            @PathVariable Long categoryId,
+            @Valid @RequestBody CategorizationRule rule) {
+
+        return ruleService.createRule(categoryId, rule);
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public List<CategorizationRule> getRulesByCategory(@PathVariable Long categoryId) {
+        return ruleService.getRulesByCategory(categoryId);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategorizationRule> getRuleById(@PathVariable Long id) {
-        return ResponseEntity.ok(ruleService.getRuleById(id));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CategorizationRule> updateRule(@PathVariable Long id, @RequestBody CategorizationRule rule) {
-        return ResponseEntity.ok(ruleService.updateRule(id, rule));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRule(@PathVariable Long id) {
-        ruleService.deleteRule(id);
-        return ResponseEntity.noContent().build();
+    public CategorizationRule getRule(@PathVariable Long id) {
+        return ruleService.getRule(id);
     }
 }
-    
