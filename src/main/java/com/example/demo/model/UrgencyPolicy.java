@@ -15,7 +15,11 @@ public class UrgencyPolicy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String level; // e.g. HIGH, MEDIUM, LOW
+    private String level; // HIGH, MEDIUM, LOW
 
     private String description;
+
+    // ✅ Fields expected by engine
+    private String keyword; // keyword to match (e.g. "critical", "down", "urgent")
+    private String urgencyOverride; // e.g. escalate to HIGH
 }

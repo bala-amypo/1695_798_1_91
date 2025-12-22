@@ -15,9 +15,21 @@ public class CategorizationRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // ✅ Keyword or phrase to detect in ticket description
+    @Column(nullable = false)
     private String keyword;
 
+    // Optional — can store pattern logic or rule explanation
+    private String pattern;
+
+    // Optional weight or priority of rule matching
+    private int priority = 1;
+
+    // ✅ Target category for this rule
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    // Optional message to describe rule purpose
+    private String description;
 }

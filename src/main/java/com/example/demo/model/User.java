@@ -21,5 +21,13 @@ public class User {
 
     private String password;
 
-    private String role; // e.g. ADMIN, USER, TECHNICIAN
+    private String role; // e.g. ADMIN, USER
+
+    // ✅ Add this constructor (4 parameters)
+    public User(Long id, String username, String password, String role) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
 }

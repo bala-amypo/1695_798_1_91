@@ -20,11 +20,12 @@ public class Ticket {
     @Column(length = 2000)
     private String description;
 
-    private String status; // e.g. OPEN, IN_PROGRESS, CLOSED
+    private String status;
 
+    // ✅ Used by categorization engine
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @JoinColumn(name = "assigned_category_id")
+    private Category assignedCategory;
 
     @ManyToOne
     @JoinColumn(name = "created_by")
