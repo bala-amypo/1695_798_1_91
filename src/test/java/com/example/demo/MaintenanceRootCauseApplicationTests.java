@@ -669,4 +669,79 @@ public class MaintenanceRootCauseApplicationTests {
     when(ticketRepository.findById(1L)).thenReturn(Optional.of(t));
     when(categoryRepository.findAll()).thenReturn(List.of(electrical));
     when(ruleRepository.findAll()).thenReturn(List.of(rule));
-   
+    when(policyRepository.findAll()).thenReturn(List.of());
+    when(ticketRepository.save(any(Ticket.class))).thenAnswer(inv -> inv.getArgument(0));
+    when(logRepository.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
+
+    Ticket result = engineService.categorizeTicket(1L);
+    Assert.assertEquals(result.getAssignedCategory().getCategoryName(), "Electrical");
+    Assert.assertEquals(result.getUrgencyLevel(), "HIGH");
+  }
+
+  @Test(priority = 61)
+  public void testEngineServiceCategorizeTicketWithPolicyOverride() {
+    Ticket t = new Ticket();
+    t.setId(2L);
+    t.setTitle("Water leak in ceiling");
+    t.setDescription("There is major water leak above ceiling.");
+
+    Category plumbing = new Category();
+    plumbing.setId(11L);
+    plumbing.setCategoryName("Plumbing");
+    plumbing.setDefaultUrgency("MEDIUM");
+
+    CategorizationRule rule = new CategorizationRule();
+    rule.setCategory(plumbing);
+    rule.setKeyword("leak");
+    rule.setMatchType("CONTAINS");
+    rule.setPriority(10);
+
+    UrgencyPolicy policy = new UrgencyPolicy();
+    policy.setKeyword("major");
+    policy.setUrgencyOverride("CRITICAL");
+
+    when(ticketRepository.findById(2L)).thenReturn(Optional.of(t));
+    when(categoryRepository.findAll()).thenReturn(List.of(plumbing));
+    when(ruleRepository.findAll()).thenReturn(List.of(rule));
+    when(policyRepository.findAll()).thenReturn(List.of(policy));
+    when(ticketRepository.save(any(Ticket.class))).thenAnswer(inv -> inv.getArgument(0));
+    when(logRepository.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
+
+    Ticket result = engineService.categorizeTicket(2L);
+    Assert.assertEquals(result.getAssignedCategory().getCategoryName(), "Plumbing");
+    Assert.assertEquals(result.getUrgencyLevel(), "CRITICAL");
+  }
+
+  @Test(priority = 62)
+  public void testGetLogsForTicketEmpty() {
+    when(logRepository.findByTicket_Id(55L)).thenReturn(Collections.emptyList());
+    List<CategorizationLog> logs = engineService.getLogsForTicket(55L);
+    Assert.assertTrue(logs.isEmpty());
+  }
+
+  @Test(priority = 63)
+  public void testEngineCategorizationNoRuleNoPolicyDefaultsLow() {
+    Ticket t = new Ticket();
+    t.setTitle("Some unknown issue");
+    t.setDescription("Something not categorized yet.");
+
+    List<Category> categories = List.of();
+    List<CategorizationRule> rules = List.of();
+    List<UrgencyPolicy> policies = List.of();
+    List<CategorizationLog> logs = new ArrayList<>();
+
+    engine.categorize(t, categories, rules, policies, logs);
+    Assert.assertEquals(t.getUrgencyLevel(), "LOW");
+  }
+
+  @Test(priority = 64)
+  public void testGetLogNotFoundThrowsException() {
+    when(logRepository.findById(999L)).thenReturn(Optional.empty());
+    try {
+      engineService.getLog(999L);
+      Assert.fail("Expected ResourceNotFoundException");
+    } catch (ResourceNotFoundException ex) {
+      Assert.assertTrue(ex.getMessage().contains("Log not found"));
+    }
+  }
+}
