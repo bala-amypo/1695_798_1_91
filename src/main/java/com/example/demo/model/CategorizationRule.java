@@ -25,14 +25,23 @@ public class CategorizationRule {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+    
     @PrePersist
     protected void prePersist() {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
+        updatedAt = LocalDateTime.now();
         if (priority == null) {
             priority = 1;
         }
+    }
+    
+    @PreUpdate
+    protected void preUpdate() {
+        updatedAt = LocalDateTime.now();
     }
     
     // Getters and Setters
@@ -48,4 +57,6 @@ public class CategorizationRule {
     public void setPriority(Integer priority) { this.priority = priority; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }
