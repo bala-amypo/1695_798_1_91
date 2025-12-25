@@ -45,7 +45,7 @@ public class RuleController {
     
     @PutMapping("/{id}")
     public ResponseEntity<CategorizationRule> updateRule(@PathVariable Long id, 
-                                                        @RequestBody CategorizationRule rule) {
+                                                         @RequestBody CategorizationRule rule) {
         CategorizationRule updated = ruleService.updateRule(id, rule);
         return ResponseEntity.ok(updated);
     }

@@ -32,3 +32,21 @@ public class TicketController {
     }
     
     @GetMapping
+    public ResponseEntity<List<Ticket>> getAllTickets() {
+        List<Ticket> tickets = ticketService.getAllTickets();
+        return ResponseEntity.ok(tickets);
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Ticket> updateTicket(@PathVariable Long id, 
+                                               @RequestBody Ticket ticket) {
+        Ticket updated = ticketService.updateTicket(id, ticket);
+        return ResponseEntity.ok(updated);
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
+        ticketService.deleteTicket(id);
+        return ResponseEntity.noContent().build();
+    }
+}

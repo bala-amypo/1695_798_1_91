@@ -45,7 +45,7 @@ public class UrgencyPolicyController {
     
     @PutMapping("/{id}")
     public ResponseEntity<UrgencyPolicy> updatePolicy(@PathVariable Long id, 
-                                                     @RequestBody UrgencyPolicy policy) {
+                                                      @RequestBody UrgencyPolicy policy) {
         UrgencyPolicy updated = policyService.updatePolicy(id, policy);
         return ResponseEntity.ok(updated);
     }
