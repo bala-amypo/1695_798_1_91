@@ -1,35 +1,39 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.CategorizationLog;
+import com.example.demo.model.Ticket;
 import com.example.demo.service.CategorizationEngineService;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/categorize")
-@Tag(name = "Categorization Engine")
 public class CategorizationEngineController {
-
+    
     private final CategorizationEngineService engineService;
-
+    
+    @Autowired
     public CategorizationEngineController(CategorizationEngineService engineService) {
         this.engineService = engineService;
     }
-
-    @PostMapping("/run/{ticketId}")
-    public void categorizeTicket(@PathVariable Long ticketId) {
-        engineService.categorizeTicket(ticketId);
+    
+    @PostMapping("/ticket/{ticketId}")
+    public ResponseEntity<Ticket> categorizeTicket(@PathVariable Long ticketId) {
+        Ticket categorized = engineService.categorizeTicket(ticketId);
+        return ResponseEntity.ok(categorized);
     }
-
-    @GetMapping("/logs/{ticketId}")
-    public List<CategorizationLog> getLogsForTicket(@PathVariable Long ticketId) {
-        return engineService.getLogsForTicket(ticketId);
+    
+    @GetMapping("/logs/ticket/{ticketId}")
+    public ResponseEntity<List<CategorizationLog>> getLogsForTicket(@PathVariable Long ticketId) {
+        List<CategorizationLog> logs = engineService.getLogsForTicket(ticketId);
+        return ResponseEntity.ok(logs);
     }
-
-    @GetMapping("/log/{id}")
-    public CategorizationLog getLog(@PathVariable Long id) {
-        return engineService.getLog(id);
+    
+    @GetMapping("/logs/{logId}")
+    public ResponseEntity<CategorizationLog> getLog(@PathVariable Long logId) {
+        CategorizationLog log = engineService.getLog(logId);
+        return ResponseEntity.ok(log);
     }
 }
