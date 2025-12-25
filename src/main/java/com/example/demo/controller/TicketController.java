@@ -2,35 +2,33 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Ticket;
 import com.example.demo.service.TicketService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/tickets")
-@Tag(name = "Tickets")
 public class TicketController {
-
+    
     private final TicketService ticketService;
-
+    
+    @Autowired
     public TicketController(TicketService ticketService) {
         this.ticketService = ticketService;
     }
-
+    
     @PostMapping
-    public Ticket createTicket(@Valid @RequestBody Ticket ticket) {
-        return ticketService.createTicket(ticket);
+    public ResponseEntity<Ticket> createTicket(@RequestBody Ticket ticket) {
+        Ticket created = ticketService.createTicket(ticket);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
-
-    @GetMapping
-    public List<Ticket> getAllTickets() {
-        return ticketService.getAllTickets();
-    }
-
+    
     @GetMapping("/{id}")
-    public Ticket getTicket(@PathVariable Long id) {
-        return ticketService.getTicket(id);
+    public ResponseEntity<Ticket> getTicket(@PathVariable Long id) {
+        Ticket ticket = ticketService.getTicket(id);
+        return ResponseEntity.ok(ticket);
     }
-}
+    
+    @GetMapping
