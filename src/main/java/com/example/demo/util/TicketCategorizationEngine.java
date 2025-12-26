@@ -2,9 +2,10 @@ package com.example.demo.util;
 
 import com.example.demo.model.*;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
-@Component   // 👈 THIS IS THE FIX
+@Component
 public class TicketCategorizationEngine {
 
     public void categorize(
@@ -15,44 +16,48 @@ public class TicketCategorizationEngine {
             List<CategorizationLog> logs) {
 
         Category matchedCategory = null;
-        String assignedUrgency = "LOW";
         CategorizationRule matchedRule = null;
 
+        // 1️⃣ Apply categorization rules
         for (CategorizationRule rule : rules) {
             if (matches(ticket, rule)) {
                 matchedCategory = rule.getCategory();
                 matchedRule = rule;
-                assignedUrgency = matchedCategory.getDefaultUrgency();
+                ticket.setAssignedCategory(matchedCategory);
+                ticket.setUrgencyLevel(matchedCategory.getDefaultUrgency());
                 break;
             }
         }
 
+        // 2️⃣ Apply urgency policy override
         for (UrgencyPolicy policy : policies) {
             if (ticket.getDescription() != null &&
                 ticket.getDescription().toLowerCase()
                         .contains(policy.getKeyword().toLowerCase())) {
-                assignedUrgency = policy.getUrgencyOverride();
+                ticket.setUrgencyLevel(policy.getUrgencyOverride());
                 break;
             }
         }
 
-        ticket.setAssignedCategory(matchedCategory);
-        ticket.setUrgencyLevel(assignedUrgency);
+        // 3️⃣ Default urgency if nothing matched
+        if (ticket.getUrgencyLevel() == null) {
+            ticket.setUrgencyLevel("LOW");
+        }
 
-        if (matchedCategory != null) {
+        // 4️⃣ Log only if rule matched
+        if (matchedCategory != null && matchedRule != null) {
             CategorizationLog log = new CategorizationLog();
             log.setTicket(ticket);
             log.setAppliedRule(matchedRule);
             log.setMatchedKeyword(matchedRule.getKeyword());
             log.setAssignedCategory(matchedCategory.getCategoryName());
-            log.setAssignedUrgency(assignedUrgency);
+            log.setAssignedUrgency(ticket.getUrgencyLevel());
             logs.add(log);
         }
     }
 
     private boolean matches(Ticket ticket, CategorizationRule rule) {
         String text = (ticket.getTitle() + " " + ticket.getDescription()).toLowerCase();
-        String keyword = rule.getKeyword().toLowerCase();
-        return text.contains(keyword);
+        return text.contains(rule.getKeyword().toLowerCase());
     }
 }

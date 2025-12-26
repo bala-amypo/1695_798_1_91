@@ -23,26 +23,19 @@ public class Ticket {
     @ManyToOne
     private Category assignedCategory;
 
+    // ✅ MUST be null on creation
     private String urgencyLevel;
-
 
     private LocalDateTime createdAt;
 
     public Ticket() {}
 
-    public Ticket(String title, String description, String location, String createdBy) {
-        this.title = title;
-        this.description = description;
-        this.location = location;
-        this.createdBy = createdBy;
-    }
-
     @PrePersist
     public void prePersist() {
-    this.createdAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
+    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -59,11 +52,14 @@ public class Ticket {
     public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
 
     public Category getAssignedCategory() { return assignedCategory; }
-    public void setAssignedCategory(Category assignedCategory) { this.assignedCategory = assignedCategory; }
+    public void setAssignedCategory(Category assignedCategory) {
+        this.assignedCategory = assignedCategory;
+    }
 
     public String getUrgencyLevel() { return urgencyLevel; }
-    public void setUrgencyLevel(String urgencyLevel) { this.urgencyLevel = urgencyLevel; }
+    public void setUrgencyLevel(String urgencyLevel) {
+        this.urgencyLevel = urgencyLevel;
+    }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

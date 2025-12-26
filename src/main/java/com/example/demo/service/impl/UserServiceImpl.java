@@ -1,6 +1,5 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -14,7 +13,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -22,9 +22,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
+            // ✅ TEST EXPECTS IllegalArgumentException
             throw new IllegalArgumentException("Email already in use");
         }
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

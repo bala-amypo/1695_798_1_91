@@ -7,6 +7,7 @@ import com.example.demo.service.CategorizationEngineService;
 import com.example.demo.util.TicketCategorizationEngine;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,8 +44,9 @@ public class CategorizationEngineServiceImpl implements CategorizationEngineServ
         List<Category> categories = categoryRepository.findAll();
         List<CategorizationRule> rules = ruleRepository.findAll();
         List<UrgencyPolicy> policies = policyRepository.findAll();
-        List<CategorizationLog> logs = new ArrayList<>();
 
+        // ✅ MUST be mutable
+        List<CategorizationLog> logs = new ArrayList<>();
 
         engine.categorize(ticket, categories, rules, policies, logs);
 
