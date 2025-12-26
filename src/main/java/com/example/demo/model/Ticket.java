@@ -23,7 +23,8 @@ public class Ticket {
     @ManyToOne
     private Category assignedCategory;
 
-    private String urgencyLevel = "LOW";
+    private String urgencyLevel;
+
 
     private LocalDateTime createdAt;
 
