@@ -6,57 +6,48 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "categorization_rules")
 public class CategorizationRule {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+
+    @ManyToOne(optional = false)
     private Category category;
-    
+
     @Column(nullable = false)
     private String keyword;
-    
-    @Column(name = "match_type")
-    private String matchType = "CONTAINS";
-    
+
+    @Column(nullable = false)
+    private String matchType;
+
     private Integer priority = 1;
-    
-    @Column(name = "created_at")
+
     private LocalDateTime createdAt;
-    
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-    
+
+    public CategorizationRule() {}
+
     @PrePersist
-    protected void prePersist() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-        updatedAt = LocalDateTime.now();
-        if (priority == null) {
-            priority = 1;
-        }
+    public void prePersist() {
+        if (priority == null) priority = 1;
+        this.createdAt = LocalDateTime.now();
     }
-    
-    @PreUpdate
-    protected void preUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-    
+
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }
+
     public String getKeyword() { return keyword; }
     public void setKeyword(String keyword) { this.keyword = keyword; }
+
     public String getMatchType() { return matchType; }
     public void setMatchType(String matchType) { this.matchType = matchType; }
+
     public Integer getPriority() { return priority; }
     public void setPriority(Integer priority) { this.priority = priority; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

@@ -4,69 +4,66 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tickets", 
-       indexes = {
-           @Index(name = "idx_ticket_created_at", columnList = "created_at"),
-           @Index(name = "idx_ticket_urgency", columnList = "urgency_level")
-       })
+@Table(name = "tickets")
 public class Ticket {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(nullable = false, length = 200)
+
+    @Column(nullable = false)
     private String title;
-    
-    @Column(columnDefinition = "TEXT", nullable = false)
+
+    @Column(nullable = false, length = 1000)
     private String description;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "fk_ticket_category"))
+
+    private String location;
+    private String createdBy;
+
+    @ManyToOne
     private Category assignedCategory;
-    
-    @Column(name = "urgency_level", length = 20)
-    private String urgencyLevel;
-    
-    @Column(name = "created_at")
+
+    private String urgencyLevel = "LOW";
+
     private LocalDateTime createdAt;
-    
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-    
+
+    public Ticket() {}
+
+    public Ticket(String title, String description, String location, String createdBy) {
+        this.title = title;
+        this.description = description;
+        this.location = location;
+        this.createdBy = createdBy;
+    }
+
     @PrePersist
-    protected void prePersist() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-        updatedAt = LocalDateTime.now();
-        if (urgencyLevel == null) {
-            urgencyLevel = "LOW";
-        }
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        if (this.urgencyLevel == null) this.urgencyLevel = "LOW";
     }
-    
-    @PreUpdate
-    protected void preUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-    
-    // Getters and Setters remain the same
+
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
+
     public String getDescription() { return description; }
-    public void setDescription(String description) { 
-        if (description != null && description.length() < 10) {
-            throw new IllegalArgumentException("Description must be at least 10 characters");
-        }
-        this.description = description; 
-    }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+
+    public String getCreatedBy() { return createdBy; }
+    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
+
     public Category getAssignedCategory() { return assignedCategory; }
     public void setAssignedCategory(Category assignedCategory) { this.assignedCategory = assignedCategory; }
+
     public String getUrgencyLevel() { return urgencyLevel; }
     public void setUrgencyLevel(String urgencyLevel) { this.urgencyLevel = urgencyLevel; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }
