@@ -39,8 +39,7 @@ public class Ticket {
 
     @PrePersist
     public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-        if (this.urgencyLevel == null) this.urgencyLevel = "LOW";
+    this.createdAt = LocalDateTime.now();
     }
 
     // Getters and Setters

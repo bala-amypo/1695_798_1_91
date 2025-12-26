@@ -43,7 +43,8 @@ public class CategorizationEngineServiceImpl implements CategorizationEngineServ
         List<Category> categories = categoryRepository.findAll();
         List<CategorizationRule> rules = ruleRepository.findAll();
         List<UrgencyPolicy> policies = policyRepository.findAll();
-        List<CategorizationLog> logs = List.of();
+        List<CategorizationLog> logs = new ArrayList<>();
+
 
         engine.categorize(ticket, categories, rules, policies, logs);
 
