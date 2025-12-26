@@ -2,38 +2,36 @@ package com.example.demo.controller;
 
 import com.example.demo.model.CategorizationLog;
 import com.example.demo.model.Ticket;
-import com.example.demo.service.CategorizationEngineService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.service.impl.CategorizationEngineServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/categorize")
+@Tag(name = "Categorization Engine", description = "Endpoints to run categorization and view logs")
 public class CategorizationEngineController {
-    
-    private final CategorizationEngineService engineService;
-    
-    @Autowired
-    public CategorizationEngineController(CategorizationEngineService engineService) {
+
+    private final CategorizationEngineServiceImpl engineService;
+
+    public CategorizationEngineController(CategorizationEngineServiceImpl engineService) {
         this.engineService = engineService;
     }
-    
-    @PostMapping("/ticket/{ticketId}")
-    public ResponseEntity<Ticket> categorizeTicket(@PathVariable Long ticketId) {
-        Ticket categorized = engineService.categorizeTicket(ticketId);
-        return ResponseEntity.ok(categorized);
+
+    @PostMapping("/run/{ticketId}")
+    public ResponseEntity<Ticket> runCategorization(@PathVariable Long ticketId) {
+        return ResponseEntity.ok(engineService.categorizeTicket(ticketId));
     }
-    
-    @GetMapping("/logs/ticket/{ticketId}")
-    public ResponseEntity<List<CategorizationLog>> getLogsForTicket(@PathVariable Long ticketId) {
-        List<CategorizationLog> logs = engineService.getLogsForTicket(ticketId);
-        return ResponseEntity.ok(logs);
+
+    @GetMapping("/logs/{ticketId}")
+    public ResponseEntity<List<CategorizationLog>> getLogs(@PathVariable Long ticketId) {
+        return ResponseEntity.ok(engineService.getLogsForTicket(ticketId));
     }
-    
-    @GetMapping("/logs/{logId}")
-    public ResponseEntity<CategorizationLog> getLog(@PathVariable Long logId) {
-        CategorizationLog log = engineService.getLog(logId);
-        return ResponseEntity.ok(log);
+
+    @GetMapping("/log/{id}")
+    public ResponseEntity<CategorizationLog> getLog(@PathVariable Long id) {
+        return ResponseEntity.ok(engineService.getLog(id));
     }
 }
