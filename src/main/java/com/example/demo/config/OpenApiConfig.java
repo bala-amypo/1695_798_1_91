@@ -17,7 +17,7 @@ import java.util.List;
         info = @Info(
                 title = "Maintenance Ticket Root-Cause Categorizer API",
                 version = "1.0",
-                description = "API for managing maintenance tickets, categories, rules, urgency policies, and the categorization engine."
+                description = "API for managing maintenance tickets, categories, rules, urgency policies, and automated categorization engine."
         ),
         security = @SecurityRequirement(name = "bearerAuth")
 )
@@ -30,12 +30,10 @@ import java.util.List;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI openAPI() {
+    public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .servers(List.of(
-                        new Server()
-                                .url("https://9220.pro604cr.amypo.ai")
-                                .description("Preview Server")
+                        new Server().url("https://9220.pro604cr.amypo.ai")
                 ));
     }
 }
